@@ -6,12 +6,19 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using CryptoConsumeAPI.Models;
+using System.Text.Json;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace CryptoConsumeAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
         }

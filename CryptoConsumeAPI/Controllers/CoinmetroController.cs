@@ -25,7 +25,7 @@ namespace CryptoConsumeAPI.Controllers
             return tokens.GetRawText();
         }
 
-        private static async Task<JsonElement> ProcessTokens()
+        public async Task<JsonElement> ProcessTokens()
         {
             var result = await HTTPClientWrapper<Coins>.Get($"{api}/prices");
             return result.LatestPrices;
@@ -35,8 +35,5 @@ namespace CryptoConsumeAPI.Controllers
         {
             throw new NotImplementedException();
         }
-
-        // GET: /<controller>/
-
     }
 }

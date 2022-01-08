@@ -12,9 +12,9 @@ namespace CryptoConsumeAPI.Controllers
     [Route("api/[controller]")]
     public class BinanceController : Controller, IExchangeController
     {
-        // GET: api/values
+       
         private static string api = "https://api.binance.com/api/v3";
-        // GET: api/uphold
+        // GET: api/binance
         [HttpGet]
         public async Task<string> GetAsync()
         {

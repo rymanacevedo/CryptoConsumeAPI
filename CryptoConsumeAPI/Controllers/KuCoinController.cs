@@ -26,7 +26,7 @@ namespace CryptoConsumeAPI.Controllers
             return tokens.GetRawText();
         }
 
-        private static async Task<JsonElement> ProcessTokens()
+        public async Task<JsonElement> ProcessTokens()
         {
             var result = await HTTPClientWrapper<Coins>.Get($"{api}/prices");
             return result.Data;
@@ -36,25 +36,7 @@ namespace CryptoConsumeAPI.Controllers
         [HttpGet("{name}")]
         public string Get(string name)
         {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            throw new NotImplementedException();
         }
     }
 }

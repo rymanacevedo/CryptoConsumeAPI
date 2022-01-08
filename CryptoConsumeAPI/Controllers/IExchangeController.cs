@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,5 +9,6 @@ namespace CryptoConsumeAPI.Controllers
     {
         string Get(string name);
         Task<string> GetAsync();
+        Task<JsonElement> ProcessTokens();
     }
 }

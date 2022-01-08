@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CryptoConsumeAPI.Controllers
 {
     [Route("api/[controller]")] 
-    public class CoinmetroController : Controller
+    public class CoinmetroController : Controller, IExchangeController
     {
         private static readonly HttpClient client = new HttpClient();
         private static string api = "https://api.coinmetro.com/exchange";
@@ -35,7 +35,13 @@ namespace CryptoConsumeAPI.Controllers
             var tokens = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
             return tokens.LatestPrices;
         }
+        [HttpGet("{name}")]
+        public string Get(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         // GET: /<controller>/
-      
+
     }
 }

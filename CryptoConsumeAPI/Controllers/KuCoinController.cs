@@ -14,7 +14,7 @@ using CryptoConsumeAPI.Models;
 namespace CryptoConsumeAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class KuCoinController : Controller
+    public class KuCoinController : Controller, IExchangeController
     {
         private static readonly HttpClient client = new HttpClient();
         private static string api = "http://api.kucoin.com/api/v1";
@@ -39,8 +39,8 @@ namespace CryptoConsumeAPI.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{name}")]
+        public string Get(string name)
         {
             return "value";
         }

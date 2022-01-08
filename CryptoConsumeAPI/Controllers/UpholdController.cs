@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CryptoConsumeAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class UpholdController : Controller
+    public class UpholdController : Controller, IExchangeController
     {
         private static readonly HttpClient client = new HttpClient();
         private static string api = "https://api.uphold.com/v0/ticker";
@@ -34,11 +34,11 @@ namespace CryptoConsumeAPI.Controllers
             var tokens = await JsonSerializer.DeserializeAsync<dynamic>(await streamTask);
             return tokens;
         }
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/values/name
+        [HttpGet("{name}")]
+        public string Get(string name)
         {
-            return "value";
+            throw new NotImplementedException();
         }
 
         // POST api/values

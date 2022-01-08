@@ -17,7 +17,6 @@ namespace CryptoConsumeAPI.Controllers
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("applcation/json"));
 
                 var streamTask = client.GetStreamAsync(url);
-                Console.WriteLine(url);
                 result = await JsonSerializer.DeserializeAsync<T>(await streamTask);
             }
 

@@ -3,28 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading.Tasks;
 using CryptoConsumeAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CryptoConsumeAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class KuCoinController : Controller
+    public class UpholdController : Controller
     {
         private static readonly HttpClient client = new HttpClient();
-        private static string api = "http://api.kucoin.com/api/v1";
+        private static string api = "https://api.uphold.com/v0/ticker";
         private static string option = "application/json";
-        // GET: api/kucoin
         [HttpGet]
         public async Task<string> GetAsync()
         {
             var tokens = await ProcessTokens();
-            
             return tokens.GetRawText();
         }
 
@@ -33,11 +30,10 @@ namespace CryptoConsumeAPI.Controllers
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue(option));
-            var streamTask = client.GetStreamAsync($"{api}/prices");
-            var tokens = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
-            return tokens.Data;
+            var streamTask = client.GetStreamAsync($"{api}/BTC");
+            var tokens = await JsonSerializer.DeserializeAsync<dynamic>(await streamTask);
+            return tokens;
         }
-
         // GET api/values/5
         [HttpGet("{id}")]
         public string Get(int id)

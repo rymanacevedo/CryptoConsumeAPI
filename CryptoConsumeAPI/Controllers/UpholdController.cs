@@ -15,9 +15,8 @@ namespace CryptoConsumeAPI.Controllers
     [Route("api/[controller]")]
     public class UpholdController : Controller, IExchangeController
     {
-        private static readonly HttpClient client = new HttpClient();
         private static string api = "https://api.uphold.com/v0/ticker";
-        private static string option = "application/json";
+        // GET: api/uphold
         [HttpGet]
         public async Task<string> GetAsync()
         {

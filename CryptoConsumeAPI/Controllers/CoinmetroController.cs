@@ -15,7 +15,6 @@ namespace CryptoConsumeAPI.Controllers
     [Route("api/[controller]")] 
     public class CoinmetroController : Controller, IExchangeController
     {
-        private static readonly HttpClient client = new HttpClient();
         private static string api = "https://api.coinmetro.com/exchange";
    
         // GET: api/coinmetro

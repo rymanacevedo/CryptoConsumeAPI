@@ -16,7 +16,6 @@ namespace CryptoConsumeAPI.Controllers
     [Route("api/[controller]")]
     public class KuCoinController : Controller, IExchangeController
     {
-        private static readonly HttpClient client = new HttpClient();
         private static string api = "http://api.kucoin.com/api/v1";
         // GET: api/kucoin
         [HttpGet]

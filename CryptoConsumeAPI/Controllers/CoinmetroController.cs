@@ -17,7 +17,7 @@ namespace CryptoConsumeAPI.Controllers
     {
         private static readonly HttpClient client = new HttpClient();
         private static string api = "https://api.coinmetro.com/exchange";
-        private static string option = "application/json";
+   
         // GET: api/coinmetro
         [HttpGet]
         public async Task<string> GetAsync()
@@ -28,12 +28,8 @@ namespace CryptoConsumeAPI.Controllers
 
         private static async Task<JsonElement> ProcessTokens()
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue(option));
-            var streamTask = client.GetStreamAsync($"{api}/prices");
-            var tokens = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
-            return tokens.LatestPrices;
+            var result = await HTTPClientWrapper<Coins>.Get($"{api}/prices");
+            return result.LatestPrices;
         }
         [HttpGet("{name}")]
         public string Get(string name)

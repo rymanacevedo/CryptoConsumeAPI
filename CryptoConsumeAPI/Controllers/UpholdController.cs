@@ -27,12 +27,8 @@ namespace CryptoConsumeAPI.Controllers
 
         private static async Task<JsonElement> ProcessTokens()
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue(option));
-            var streamTask = client.GetStreamAsync($"{api}/BTC");
-            var tokens = await JsonSerializer.DeserializeAsync<dynamic>(await streamTask);
-            return tokens;
+            var result = await HTTPClientWrapper<dynamic>.Get($"{api}/BTC");
+            return result;
         }
         // GET api/values/name
         [HttpGet("{name}")]

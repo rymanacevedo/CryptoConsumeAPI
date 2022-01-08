@@ -18,7 +18,6 @@ namespace CryptoConsumeAPI.Controllers
     {
         private static readonly HttpClient client = new HttpClient();
         private static string api = "http://api.kucoin.com/api/v1";
-        private static string option = "application/json";
         // GET: api/kucoin
         [HttpGet]
         public async Task<string> GetAsync()
@@ -30,12 +29,8 @@ namespace CryptoConsumeAPI.Controllers
 
         private static async Task<JsonElement> ProcessTokens()
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue(option));
-            var streamTask = client.GetStreamAsync($"{api}/prices");
-            var tokens = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
-            return tokens.Data;
+            var result = await HTTPClientWrapper<Coins>.Get($"{api}/prices");
+            return result.Data;
         }
 
         // GET api/values/5

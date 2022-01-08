@@ -11,9 +11,6 @@ namespace CryptoConsumeAPI.Models
 
         [JsonPropertyName("latestPrices")]
         public JsonElement LatestPrices { get; set; }
-
-        [JsonPropertyName("pair")]
-        public JsonElement Pair { get; set; }
     }
 
 }

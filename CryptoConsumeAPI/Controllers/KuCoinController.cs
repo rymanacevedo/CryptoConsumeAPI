@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Text.Json;
 using CryptoConsumeAPI.Models;
+using System.Text;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,17 +27,29 @@ namespace CryptoConsumeAPI.Controllers
             return tokens.GetRawText();
         }
 
-        public async Task<JsonElement> ProcessTokens()
-        {
-            var result = await HTTPClientWrapper<Coins>.Get($"{api}/prices");
-            return result.Data;
+        // GET api/kucoin/name
+        [HttpGet("{name}")]
+        public async Task<string> Get(string name)
+        { 
+            var tokens = await ProcessTokens(name);
+            return tokens.GetRawText();
         }
 
-        // GET api/values/5
-        [HttpGet("{name}")]
-        public string Get(string name)
+        public async Task<JsonElement> ProcessTokens(string name = null)
         {
-            throw new NotImplementedException();
+            StringBuilder builder = new StringBuilder();
+            Coins coins;
+            JsonElement result = new JsonElement();
+            builder.Append(api);
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                builder.Append("/prices");
+                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
+                result = coins.Data;
+            }
+            return result;
         }
+
     }
 }

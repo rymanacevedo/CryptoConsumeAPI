@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CryptoConsumeAPI.Models;
@@ -24,16 +25,29 @@ namespace CryptoConsumeAPI.Controllers
             var tokens = await ProcessTokens();
             return tokens.GetRawText();
         }
-
-        public async Task<JsonElement> ProcessTokens()
-        {
-            var result = await HTTPClientWrapper<Coins>.Get($"{api}/prices");
-            return result.LatestPrices;
-        }
+        // GET: api/coinmetro/name
         [HttpGet("{name}")]
-        public string Get(string name)
+        public async Task<string> Get(string name)
         {
-            throw new NotImplementedException();
+            var tokens = await ProcessTokens(name);
+            return tokens.GetRawText();
         }
+
+        public async Task<JsonElement> ProcessTokens(string name = null)
+        {
+            StringBuilder builder = new StringBuilder();
+            Coins coins;
+            JsonElement result = new JsonElement();
+            builder.Append(api);
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                builder.Append("/prices");
+                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
+                result = coins.LatestPrices;
+            }
+            return result;
+        }
+
     }
 }

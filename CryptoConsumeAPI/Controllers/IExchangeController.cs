@@ -7,8 +7,8 @@ namespace CryptoConsumeAPI.Controllers
 {
     public interface IExchangeController
     {
-        string Get(string name);
+        Task<string> Get(string name);
         Task<string> GetAsync();
-        Task<JsonElement> ProcessTokens();
+
     }
 }

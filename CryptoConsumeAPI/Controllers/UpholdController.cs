@@ -31,15 +31,16 @@ namespace CryptoConsumeAPI.Controllers
             var tokens = await ProcessTokens(name);
             return tokens.GetRawText();
         }
-        public async Task<JsonElement> ProcessTokens(string name = null)
+        public async Task<JsonElement> ProcessTokens(string name = null, string currency = "USD")
         {
             StringBuilder builder = new StringBuilder();
             JsonElement result = new JsonElement();
+            string pair = $"{name}-{currency}";
             builder.Append(api);
 
             if (!String.IsNullOrEmpty(name))
             {
-                builder.Append($"/{name}");
+                builder.Append($"/{pair}");
                 result = await HTTPClientWrapper<dynamic>.Get(builder.ToString());
             }
             return result;

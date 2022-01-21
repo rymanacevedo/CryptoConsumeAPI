@@ -11,6 +11,11 @@ namespace CryptoConsumeAPI.Models
 
         [JsonPropertyName("latestPrices")]
         public JsonElement LatestPrices { get; set; }
+
+        public static implicit operator JsonElement(Coins v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

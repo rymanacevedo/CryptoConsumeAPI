@@ -22,7 +22,7 @@ namespace CryptoConsumeAPI.Controllers
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens();
+            var tokens = await ProcessTokens("BTC");
             return tokens.GetRawText();
         }
         // GET: api/coinmetro/name
@@ -33,16 +33,17 @@ namespace CryptoConsumeAPI.Controllers
             return tokens.GetRawText();
         }
 
-        public async Task<JsonElement> ProcessTokens(string name = null)
+        public async Task<JsonElement> ProcessTokens(string name = null, string currency = "USD")
         {
             StringBuilder builder = new StringBuilder();
             Coins coins;
+            string pair = $"{name}{currency}";
             JsonElement result = new JsonElement();
             builder.Append(api);
 
             if (!String.IsNullOrEmpty(name))
             {
-                builder.Append("/prices");
+                builder.Append($"/prices/{pair}");
                 coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
                 result = coins.LatestPrices;
             }

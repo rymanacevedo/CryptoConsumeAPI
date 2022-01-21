@@ -25,6 +25,7 @@ namespace CryptoConsumeAPI.Controllers
             var tokens = await ProcessTokens();
             
             return tokens.GetRawText();
+
         }
 
         // GET api/kucoin/name
@@ -44,12 +45,17 @@ namespace CryptoConsumeAPI.Controllers
 
             if (!String.IsNullOrEmpty(name))
             {
-                builder.Append("/prices");
-                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
+                builder.Append($"/prices?currencies={name}");
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+                var streamTask = client.GetStreamAsync(builder.ToString());
+                coins = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
                 result = coins.Data;
             }
             return result;
-        }
-
+         }
+  
     }
 }

@@ -31,16 +31,18 @@ namespace CryptoConsumeAPI.Controllers
             return tokens.GetRawText();
         }
 
-        private static async Task<JsonElement> ProcessTokens(string name = null)
+        private static async Task<JsonElement> ProcessTokens(string name = null, string currency = "USDT")
         {
             StringBuilder builder = new StringBuilder();
-  
             JsonElement result = new JsonElement();
+            string pair = $"{name}{currency}";
+
             builder.Append(api);
 
             if (!String.IsNullOrEmpty(name))
             {
-                builder.Append($"/avgPrice?symbol={name}");
+                //https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT
+                builder.Append($"/ticker/price?symbol={pair}");
                 Console.WriteLine(builder.ToString());
                 result = await HTTPClientWrapper<dynamic>.Get(builder.ToString());
             }

@@ -8,6 +8,7 @@
     <None Remove="Newtonsoft.Json" />
     <None Remove="Models\" />
     <None Remove="Controller\" />
+    <None Remove="Controllers\Exchanges\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -15,5 +16,6 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Controllers\Exchanges\" />
   </ItemGroup>
 </Project>

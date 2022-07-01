@@ -43,12 +43,7 @@ namespace CryptoConsumeAPI.Controllers
             if (!String.IsNullOrEmpty(name))
             {
                 builder.Append($"/prices?currencies={name}");
-                var client = new HttpClient();
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-                var streamTask = client.GetStreamAsync(builder.ToString());
-                coins = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
+                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
                 result = coins.Data;
             }
             return result;

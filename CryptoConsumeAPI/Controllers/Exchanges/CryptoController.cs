@@ -17,7 +17,7 @@ namespace CryptoConsumeAPI.Controllers
     public class CryptoController : Controller, IExchangeController
     {
         private static string api = "https://api.crypto.com/v2";
-        // GET: api/values
+        // GET: api/crypto
         [HttpGet]
         public async Task<string> GetAsync()
         {
@@ -25,7 +25,7 @@ namespace CryptoConsumeAPI.Controllers
             return tokens.GetRawText();
         }
 
-        // GET api/values/5
+        // GET api/crypto/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
@@ -44,13 +44,7 @@ namespace CryptoConsumeAPI.Controllers
             if (!String.IsNullOrEmpty(name))
             {
                 builder.Append($"/public/get-ticker?instrument_name={pair}");
-                var client = new HttpClient();
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-                string url = builder.ToString();
-                var streamTask = client.GetStreamAsync(url);
-                coins = await JsonSerializer.DeserializeAsync<Coins>(await streamTask);
+                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
                 result = coins.Result;
             }
             return result;

@@ -10,12 +10,23 @@ namespace CryptoConsumeAPI.Controllers
        private static HttpClient client = new HttpClient();
         public static async Task<T> Get(string url)
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-            var streamTask = client.GetStreamAsync(url);
-            var result = await JsonSerializer.DeserializeAsync<T>(await streamTask);
-            return result;
+
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Clear();
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
+            var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else
+            {
+                return null;
+            }
+
         }
     }
 }

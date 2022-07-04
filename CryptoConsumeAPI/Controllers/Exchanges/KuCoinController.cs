@@ -15,39 +15,23 @@ namespace CryptoConsumeAPI.Controllers
     public class KuCoinController : Controller, IExchangeController
     {
         private static string api = "http://api.kucoin.com/api/v1";
+        private string currency = "USDT";
+        private string coin = "BTC";
         // GET: api/kucoin
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens();
-            
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(coin, currency, "kucoin", $"prices?currencies={coin}", api);
+            return tokens;
 
         }
 
         // GET api/kucoin/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
-        { 
-            var tokens = await ProcessTokens(name);
-            return tokens.GetRawText();
-        }
-
-        public async Task<JsonElement> ProcessTokens(string name = null)
         {
-            StringBuilder builder = new StringBuilder();
-            Coins coins;
-            JsonElement result = new JsonElement();
-            builder.Append(api);
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                builder.Append($"/prices?currencies={name}");
-                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
-                result = coins.Data;
-            }
-            return result;
-         }
-  
+            var tokens = await Processor.Start(name, currency, "kucoin", $"prices?currencies={name}", api);
+            return tokens;
+        }
     }
 }

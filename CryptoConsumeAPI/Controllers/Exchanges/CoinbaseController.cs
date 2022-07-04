@@ -13,39 +13,22 @@ namespace CryptoConsumeAPI.Controllers
     public class CoinbaseController : Controller, IExchangeController
     {
         private static string api = "https://api.coinbase.com/v2/prices";
+        private string currency = "USD";
+        private string coin = "BTC";
         // GET: api/coinbase
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens();
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(coin, currency, "coinbase", $"{coin}-{currency}/buy", api);
+            return tokens;
         }
         // GET api/coinbase/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await ProcessTokens(name);
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(name, currency, "coinbase", $"{name}-{currency}/buy", api);
+            return tokens;
         }
-
-        public async Task<JsonElement> ProcessTokens(string name = null, string currency = "USD")
-        {
-            StringBuilder builder = new StringBuilder();
-            Coins coins;
-            string pair = $"{name}-{currency}";
-            JsonElement result = new JsonElement();
-            builder.Append(api);
-
-            if(!String.IsNullOrEmpty(name))
-            {
-                builder.Append($"/{pair}/buy");
-                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
-                result = coins.Data;
-            }
-            return result;
-        }
-
-
      
     }
 }

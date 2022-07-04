@@ -11,39 +11,22 @@ namespace CryptoConsumeAPI.Controllers
     [Route("api/[controller]")]
     public class BinanceController : Controller, IExchangeController
     {
-       
         private static string api = "https://api.binance.com/api/v3";
+        private string currency = "USDT";
+        private string coin = "BTC";
         // GET: api/binance
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens();
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(coin, currency, "binance", $"ticker/price?symbol={coin}{currency}", api);
+            return tokens;
         }
         // GET api/values/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await ProcessTokens(name);
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(name, currency, "binance", $"ticker/price?symbol={name}{currency}", api);
+            return tokens;
         }
-
-        private static async Task<JsonElement> ProcessTokens(string name = null, string currency = "USDT")
-        {
-            StringBuilder builder = new StringBuilder();
-            JsonElement result = new JsonElement();
-            string pair = $"{name}{currency}";
-
-            builder.Append(api);
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                //https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT
-                builder.Append($"/ticker/price?symbol={pair}");
-                result = await HTTPClientWrapper<dynamic>.Get(builder.ToString());
-            }
-            return result;
-        }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Immutable;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -17,37 +18,23 @@ namespace CryptoConsumeAPI.Controllers
     public class CryptoController : Controller, IExchangeController
     {
         private static string api = "https://api.crypto.com/v2";
+        private string currency = "USDT";
+        private string coin = "BTC";
+
         // GET: api/crypto
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens();
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(coin, currency, "crypto", $"public/get-ticker?instrument_name={coin}_{currency}", api);
+            return tokens;
         }
 
         // GET api/crypto/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await ProcessTokens(name);
-            return tokens.GetRawText();
-        }
-
-        public async Task<JsonElement> ProcessTokens(string name = null, string currency = "USDT")
-        {
-            StringBuilder builder = new StringBuilder();
-            Coins coins;
-            JsonElement result = new JsonElement();
-            string pair = $"{name}_{currency}";
-            builder.Append(api);
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                builder.Append($"/public/get-ticker?instrument_name={pair}");
-                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
-                result = coins.Result;
-            }
-            return result;
+            var tokens = await Processor.Start(name, currency, "crypto", $"public/get-ticker?instrument_name={name}_{currency}", api);
+            return tokens;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Threading;
+using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,37 +14,22 @@ namespace CryptoConsumeAPI.Controllers
     public class CoinmetroController : Controller, IExchangeController
     {
         private static string api = "https://api.coinmetro.com/exchange";
+        private string currency = "USD";
+        private string coin = "BTC";
    
         // GET: api/coinmetro
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens("BTC");
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(coin, currency, "coinmetro", $"prices/{coin}{currency}", api);
+            return tokens;
         }
         // GET: api/coinmetro/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await ProcessTokens(name);
-            return tokens.GetRawText();
-        }
-
-        public async Task<JsonElement> ProcessTokens(string name = null, string currency = "USD")
-        {
-            StringBuilder builder = new StringBuilder();
-            Coins coins;
-            string pair = $"{name}{currency}";
-            JsonElement result = new JsonElement();
-            builder.Append(api);
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                builder.Append($"/prices/{pair}");
-                coins = await HTTPClientWrapper<Coins>.Get(builder.ToString());
-                result = coins.LatestPrices;
-            }
-            return result;
+            var tokens = await Processor.Start(name, currency, "coinmetro", $"prices/{name}{currency}", api);
+            return tokens;
         }
 
     }

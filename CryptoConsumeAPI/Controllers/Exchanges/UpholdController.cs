@@ -17,35 +17,22 @@ namespace CryptoConsumeAPI.Controllers
     public class UpholdController : Controller, IExchangeController
     {
         private static string api = "https://api.uphold.com/v0/ticker";
+        private string currency = "USD";
+        private string coin = "BTC";
         // GET: api/uphold
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await ProcessTokens();
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(coin, currency, "uphold", $"{coin}-{currency}", api);
+            return tokens;
         }
         // GET api/values/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await ProcessTokens(name);
-            return tokens.GetRawText();
+            var tokens = await Processor.Start(name, currency, "uphold", $"{name}-{currency}", api);
+            return tokens;
         }
-        public async Task<JsonElement> ProcessTokens(string name = null, string currency = "USD")
-        {
-            StringBuilder builder = new StringBuilder();
-            JsonElement result = new JsonElement();
-            string pair = $"{name}-{currency}";
-            builder.Append(api);
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                builder.Append($"/{pair}");
-                result = await HTTPClientWrapper<dynamic>.Get(builder.ToString());
-            }
-            return result;
-        }
-
 
     }
 }

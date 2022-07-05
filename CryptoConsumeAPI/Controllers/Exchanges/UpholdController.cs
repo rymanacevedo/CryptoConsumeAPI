@@ -11,18 +11,19 @@ namespace CryptoConsumeAPI.Controllers
         private static string api = "https://api.uphold.com/v0/ticker";
         private string currency = "USD";
         private string coin = "BTC";
+        private string exchange = "uphold";
         // GET: api/uphold
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await Processor.Start(coin, currency, "uphold", $"{coin}-{currency}", api);
+            var tokens = await Processor.Start(coin, currency, exchange, $"{coin}-{currency}", api);
             return tokens;
         }
         // GET api/values/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await Processor.Start(name, currency, "uphold", $"{name}-{currency}", api);
+            var tokens = await Processor.Start(name, currency, exchange, $"{name}-{currency}", api);
             return tokens;
         }
 

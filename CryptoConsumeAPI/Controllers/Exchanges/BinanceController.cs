@@ -11,18 +11,19 @@ namespace CryptoConsumeAPI.Controllers
         private static string api = "https://api.binance.com/api/v3";
         private string currency = "USDT";
         private string coin = "BTC";
+        private string exchange = "binance";
         // GET: api/binance
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await Processor.Start(coin, currency, "binance", $"ticker/price?symbol={coin}{currency}", api);
+            var tokens = await Processor.Start(coin, currency, exchange, $"ticker/price?symbol={coin}{currency}", api);
             return tokens;
         }
         // GET api/values/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await Processor.Start(name, currency, "binance", $"ticker/price?symbol={name}{currency}", api);
+            var tokens = await Processor.Start(name, currency, exchange, $"ticker/price?symbol={name}{currency}", api);
             return tokens;
         }
     }

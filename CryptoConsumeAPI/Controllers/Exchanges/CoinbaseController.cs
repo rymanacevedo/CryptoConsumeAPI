@@ -11,18 +11,19 @@ namespace CryptoConsumeAPI.Controllers
         private static string api = "https://api.coinbase.com/v2/prices";
         private string currency = "USD";
         private string coin = "BTC";
+        private string exchange = "coinbase";
         // GET: api/coinbase
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await Processor.Start(coin, currency, "coinbase", $"{coin}-{currency}/buy", api);
+            var tokens = await Processor.Start(coin, currency, exchange, $"{coin}-{currency}/buy", api);
             return tokens;
         }
         // GET api/coinbase/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await Processor.Start(name, currency, "coinbase", $"{name}-{currency}/buy", api);
+            var tokens = await Processor.Start(name, currency, exchange, $"{name}-{currency}/buy", api);
             return tokens;
         }
      

@@ -11,12 +11,12 @@ namespace CryptoConsumeAPI.Controllers
         private static string api = "https://api.crypto.com/v2";
         private string currency = "USDT";
         private string coin = "BTC";
-
+        private string exchange = "crypto";
         // GET: api/crypto
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            var tokens = await Processor.Start(coin, currency, "crypto", $"public/get-ticker?instrument_name={coin}_{currency}", api);
+            var tokens = await Processor.Start(coin, currency, exchange, $"public/get-ticker?instrument_name={coin}_{currency}", api);
             return tokens;
         }
 
@@ -24,7 +24,7 @@ namespace CryptoConsumeAPI.Controllers
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
         {
-            var tokens = await Processor.Start(name, currency, "crypto", $"public/get-ticker?instrument_name={name}_{currency}", api);
+            var tokens = await Processor.Start(name, currency, exchange, $"public/get-ticker?instrument_name={name}_{currency}", api);
             return tokens;
         }
     }

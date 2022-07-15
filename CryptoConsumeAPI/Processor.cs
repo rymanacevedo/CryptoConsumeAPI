@@ -1,23 +1,27 @@
-
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using CryptoConsumeAPI.Controllers;
 
-public static class Processor {
-    public static async Task<string> Start(string name = "", string currency = "USD", string exchange = "", string pair = "", string api = "") {
-        var tokens = await Process(name, currency, exchange, pair, api);
-        return tokens.GetRawText();
-    }
-    public static async Task<JsonElement> Process(string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
-    {
-        JsonElement result = new JsonElement();
+namespace CryptoConsumeAPI
+{
 
-        if (!String.IsNullOrEmpty(coin))
+    public static class Processor
+    {
+        public static async Task<string> Start(string name = "", string currency = "USD", string exchange = "", string pair = "", string api = "")
         {
-            string url = $"{api}/{pair}";
-            result = await HTTPClientWrapper<dynamic>.Get(url);
+            var tokens = await Process(name, currency, exchange, pair, api);
+            return tokens;
         }
-        return result;
+        public static async Task<string> Process(string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
+        {
+            string result = "";
+            if (!String.IsNullOrEmpty(coin))
+            {
+                string url = $"{api}/{pair}";
+                string json = await HTTPClientWrapper<dynamic>.Get(url);
+                result = JsonGenerator.Generate(json, coin, currency, exchange, pair, api);
+            }
+            return result;
+        }
     }
 }

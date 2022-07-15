@@ -9,7 +9,7 @@ namespace CryptoConsumeAPI.Controllers
 {
     public class JsonGenerator
     {
-        public static string Generate(string json, string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
+        public static string Generate(object json, string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
         {
             Asset item = new Asset(
                 Guid.NewGuid().ToString(),
@@ -24,7 +24,7 @@ namespace CryptoConsumeAPI.Controllers
             return JsonSerializer.Serialize(item);
         }
 
-        public static Task<string> GenerateAsync(string json, string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
+        public static Task<string> GenerateAsync(object json, string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
         {
             Asset item = new Asset(
                 Guid.NewGuid().ToString(),

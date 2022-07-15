@@ -5,8 +5,8 @@ namespace CryptoConsumeAPI.Controllers
 {
     public static class HTTPClientWrapper<T> where T : class
     {
-       private static HttpClient client = new HttpClient();
-        public static async Task<T> Get(string url)
+        private static HttpClient client = new HttpClient();
+        public static async Task<string> Get(string url)
         {
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -18,13 +18,9 @@ namespace CryptoConsumeAPI.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return json;
             }
-            else
-            {
-                return null;
-            }
-
+            return "Not Found";
         }
     }
 }

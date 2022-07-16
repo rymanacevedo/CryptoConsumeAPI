@@ -10,11 +10,10 @@ namespace CryptoConsumeAPI.Controllers
     {
         private static string api = "http://api.kucoin.com/api/v1";
         private string currency = "USDT";
-        private string coin = "BTC";
         private string exchange = "kucoin";
         // GET: api/kucoin
         [HttpGet]
-        public async Task<string> GetAsync()
+        public async Task<string> GetAsync(string coin = "BTC", string currency = "USD")
         {
             var tokens = await Processor.Start(coin, currency, exchange, $"prices?currencies={coin}", api);
             return tokens;

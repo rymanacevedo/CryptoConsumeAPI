@@ -5,7 +5,7 @@ namespace CryptoConsumeAPI.Controllers
     public interface IExchangeController
     {
         Task<string> Get(string name);
-        Task<string> GetAsync();
+        Task<string> GetAsync(string coin, string currency);
 
     }
 }

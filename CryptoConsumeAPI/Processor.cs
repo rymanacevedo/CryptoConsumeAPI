@@ -18,7 +18,7 @@ namespace CryptoConsumeAPI
             if (!String.IsNullOrEmpty(coin))
             {
                 string url = $"{api}/{pair}";
-                string json = await HTTPClientWrapper<dynamic>.Get(url);
+                object json = await HTTPClientWrapper<dynamic>.Get(url);
                 result = JsonGenerator.Generate(json, coin, currency, exchange, pair, api);
             }
             return result;

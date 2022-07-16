@@ -10,11 +10,10 @@ namespace CryptoConsumeAPI.Controllers
     {
         private static string api = "https://api.crypto.com/v2";
         private string currency = "USDT";
-        private string coin = "BTC";
         private string exchange = "crypto";
         // GET: api/crypto
         [HttpGet]
-        public async Task<string> GetAsync()
+        public async Task<string> GetAsync(string coin = "BTC", string currency = "USDT")
         {
             var tokens = await Processor.Start(coin, currency, exchange, $"public/get-ticker?instrument_name={coin}_{currency}", api);
             return tokens;

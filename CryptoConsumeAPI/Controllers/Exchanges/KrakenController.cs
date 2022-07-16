@@ -8,11 +8,10 @@ namespace CryptoConsumeAPI.Controllers
     {
         private static string api = "https://api.kraken.com/0/public/Ticker";
         private string currency = "USD";
-        private string coin = "BTC";
         private string exchange = "kraken";
         // GET: api/kraken
         [HttpGet]
-        public async Task<string> GetAsync()
+        public async Task<string> GetAsync(string coin = "BTC", string currency = "USD")
         {
             var tokens = await Processor.Start(coin, currency, exchange, $"?pair={coin}{currency}", api);
             return tokens;

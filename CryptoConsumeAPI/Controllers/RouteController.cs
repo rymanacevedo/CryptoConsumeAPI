@@ -13,14 +13,16 @@ namespace CryptoConsumeAPI.Controllers
     {
         private Dictionary<string, decimal>[] keyValuePairs;
         // GET: api/route
-        [HttpGet]
+        [HttpGet("{name}")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
+
+
         // GET api/values/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]   
         public string Get(int id)
         {
             return "value";

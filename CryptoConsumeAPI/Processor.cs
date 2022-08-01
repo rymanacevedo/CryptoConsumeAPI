@@ -19,7 +19,8 @@ namespace CryptoConsumeAPI
             {
                 string url = $"{api}/{pair}";
                 object json = await HTTPClientWrapper<dynamic>.Get(url);
-                result = JsonGenerator.Generate(json, coin, currency, exchange, pair, api);
+                dynamic price = Converter.Convert(json, exchange);
+                result = JsonGenerator.Generate(json, price, coin, currency, exchange, pair, api);
             }
             return result;
         }

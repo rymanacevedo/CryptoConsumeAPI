@@ -9,13 +9,13 @@ namespace CryptoConsumeAPI.Controllers
 {
     public class JsonGenerator
     {
-        public static string Generate(object json, string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
+        public static string Generate(object json, dynamic price, string coin = null, string currency = "USD", string exchange = "", string pair = "", string api = "")
         {
             Asset item = new Asset(
                 Guid.NewGuid().ToString(),
                 coin,
                 json,
-                1,
+                price,
                 1,
                 exchange,
                 currency,

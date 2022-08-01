@@ -21,7 +21,7 @@ namespace CryptoConsumeAPI.Controllers
         // GET api/values/name
         [HttpGet("{name}")]
         public async Task<string> Get(string name)
-        {
+        {   
             var tokens = await Processor.Start(name, currency, exchange, $"ticker/price?symbol={name}{currency}", api);
             return tokens;
         }   

@@ -17,6 +17,18 @@ namespace CryptoConsumeAPI.Controllers
             var binance = JsonSerializer.Deserialize<Binance>(json.ToString(), options);
             return binance.Price;
         }
+
+        private static dynamic ConvertKraken(object json)
+        {
+            var options = new JsonSerializerOptions()
+            {
+                NumberHandling = JsonNumberHandling.AllowReadingFromString |
+                JsonNumberHandling.WriteAsString
+            };
+
+            var kraken = JsonSerializer.Deserialize<Kraken>(json.ToString(), options);
+            return kraken.Result.Crypto;
+        }
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -44,8 +56,9 @@ namespace CryptoConsumeAPI.Controllers
                 //         case "hitbtc":
                 //             result = ConvertHitbtc(json);
                 //             break;
-                //         case "kraken":
-                //             result = ConvertKraken(json);
+                case "kraken":
+                    result = ConvertKraken(json);
+                    break;
                 //             break;
                 //         case "poloniex":
                 //             result = ConvertPoloniex(json);
@@ -57,7 +70,7 @@ namespace CryptoConsumeAPI.Controllers
                 //             result = ConvertZaif(json);
                 //             break;
                 default:
-                    result = json;
+                    result = 0;
                     break;
             }
             return result;

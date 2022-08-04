@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CryptoConsumeAPI.Models.ExchangeConvertors;
+using JsonEasyNavigation;
 
 namespace CryptoConsumeAPI.Controllers
 {
@@ -10,8 +13,7 @@ namespace CryptoConsumeAPI.Controllers
         {
             var options = new JsonSerializerOptions()
             {
-                NumberHandling = JsonNumberHandling.AllowReadingFromString |
-                JsonNumberHandling.WriteAsString
+                NumberHandling = JsonNumberHandling.AllowReadingFromString
             };
 
             var binance = JsonSerializer.Deserialize<Binance>(json.ToString(), options);
@@ -23,11 +25,23 @@ namespace CryptoConsumeAPI.Controllers
             var options = new JsonSerializerOptions()
             {
                 NumberHandling = JsonNumberHandling.AllowReadingFromString |
-                JsonNumberHandling.WriteAsString
+                JsonNumberHandling.WriteAsString,
+                PropertyNameCaseInsensitive = true
             };
 
-            var kraken = JsonSerializer.Deserialize<Kraken>(json.ToString(), options);
-            return kraken.Result.Crypto;
+            var jsonDocument = JsonDocument.Parse(json.ToString());
+            var nav = jsonDocument.ToNavigation();
+            var result = nav["result"];
+
+            var crypto = JsonSerializer.Deserialize<Result>(result.JsonElement.ToString(), options);
+            decimal price = 0;
+            foreach (var item in crypto.Crypto)
+            {
+                nav = item.Value.ToNavigation();
+                price = Decimal.Parse(nav["a"][0].JsonElement.ToString());
+            }
+
+            return price;
         }
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)

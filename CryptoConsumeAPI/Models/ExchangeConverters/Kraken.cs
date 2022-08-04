@@ -9,7 +9,7 @@ namespace CryptoConsumeAPI.Models.ExchangeConvertors
         public Result Result { get; set; }
     }
 
-    public class Result
+    public partial class Result
     { 
         [JsonExtensionDataAttribute]
         public IDictionary<string, JsonElement> Crypto { get; set; }

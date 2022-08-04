@@ -50,7 +50,7 @@ namespace CryptoConsumeAPI.Controllers
             var options = new JsonSerializerOptions()
             {
                 NumberHandling = JsonNumberHandling.AllowReadingFromString |
-       JsonNumberHandling.WriteAsString,
+                                 JsonNumberHandling.WriteAsString,
                 PropertyNameCaseInsensitive = true
             };
             var data = JsonSerializer.Deserialize<Coinbase>(json.ToString(), options);
@@ -74,6 +74,18 @@ namespace CryptoConsumeAPI.Controllers
             return price;
         }
 
+        private static dynamic ConvertCrypto(object json)
+        {
+            decimal price = 0;
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var crypto = JsonSerializer.Deserialize<Crypto>(json.ToString(), options);
+            price = crypto.Result.Data.b;
+            return price;
+        }
+
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -91,6 +103,9 @@ namespace CryptoConsumeAPI.Controllers
                     break;
                 case "coinmetro":
                     result = ConvertCoinMetro(json);
+                    break;
+                case "crypto":
+                    result = ConvertCrypto(json);
                     break;
                 default:
                     result = 0;

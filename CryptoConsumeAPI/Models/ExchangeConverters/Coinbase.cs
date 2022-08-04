@@ -5,7 +5,7 @@ namespace CryptoConsumeAPI.Models.ExchangeConvertors
         public Data Data { get; set; }
     }
 
-    public class Data 
+    public partial class Data 
     {
         public string Base { get; set; }
         public string Currency { get; set; }

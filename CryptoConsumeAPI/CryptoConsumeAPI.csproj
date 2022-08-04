@@ -15,4 +15,7 @@
     <Folder Include="Controllers\" />
     <Folder Include="Controllers\Exchanges\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JsonEasyNavigation" Version="1.2.0" />
+  </ItemGroup>
 </Project>

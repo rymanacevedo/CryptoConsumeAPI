@@ -57,6 +57,23 @@ namespace CryptoConsumeAPI.Controllers
             price = Decimal.Parse(data.Data.Amount);
             return price;
         }
+
+
+        private static dynamic ConvertCoinMetro(object json)
+        {
+            decimal price = 0;
+            var options = new JsonSerializerOptions()
+            {
+                NumberHandling = JsonNumberHandling.AllowReadingFromString
+            };
+
+            var coinMetro = JsonSerializer.Deserialize<Coinmetro>(json.ToString(), options);
+
+            price = coinMetro.latestPrices[0].price;
+
+            return price;
+        }
+
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -66,40 +83,15 @@ namespace CryptoConsumeAPI.Controllers
                 case "binance":
                     result = ConvertBinance(json);
                     break;
-                //         case "bittrex":
-                //             result = ConvertBittrex(json);
-                //             break;
-                //         case "bitfinex":
-                //             result = ConvertBitfinex(json);
-                //             break;
-                //         case "bitstamp":
-                //             result = ConvertBitstamp(json);
-                //             break;
-                //         case "coinbase":
-                //             result = ConvertCoinbase(json);
-                //             break;-
-                //         case "gemini":
-                //             result = ConvertGemini(json);
-                //             break;
-                //         case "hitbtc":
-                //             result = ConvertHitbtc(json);
-                //             break;
                 case "kraken":
                     result = ConvertKraken(json);
                     break;
                 case "coinbase":
                     result = ConvertCoinbase(json);
                     break;
-                //             break;
-                //         case "poloniex":
-                //             result = ConvertPoloniex(json);
-                //             break;
-                //         case "yobit":
-                //             result = ConvertYobit(json);
-                //             break;
-                //         case "zaif":
-                //             result = ConvertZaif(json);
-                //             break;
+                case "coinmetro":
+                    result = ConvertCoinMetro(json);
+                    break;
                 default:
                     result = 0;
                     break;

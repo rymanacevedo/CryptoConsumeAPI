@@ -43,6 +43,20 @@ namespace CryptoConsumeAPI.Controllers
 
             return price;
         }
+
+        private static dynamic ConvertCoinbase(object json)
+        {
+            decimal price = 0;
+            var options = new JsonSerializerOptions()
+            {
+                NumberHandling = JsonNumberHandling.AllowReadingFromString |
+       JsonNumberHandling.WriteAsString,
+                PropertyNameCaseInsensitive = true
+            };
+            var data = JsonSerializer.Deserialize<Coinbase>(json.ToString(), options);
+            price = Decimal.Parse(data.Data.Amount);
+            return price;
+        }
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -72,6 +86,9 @@ namespace CryptoConsumeAPI.Controllers
                 //             break;
                 case "kraken":
                     result = ConvertKraken(json);
+                    break;
+                case "coinbase":
+                    result = ConvertCoinbase(json);
                     break;
                 //             break;
                 //         case "poloniex":

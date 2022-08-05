@@ -101,6 +101,18 @@ namespace CryptoConsumeAPI.Controllers
             return price;
         }
 
+        private static dynamic ConvertUphold(object json) 
+        {
+            decimal price = 0;
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var uphold = JsonSerializer.Deserialize<Uphold>(json.ToString(), options);
+            price = Decimal.Parse(uphold.Ask);
+            return price;
+        }
+
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -124,6 +136,9 @@ namespace CryptoConsumeAPI.Controllers
                     break;
                 case "kucoin":
                     result = ConvertKucoin(json);
+                    break;
+                case "uphold":
+                    result = ConvertUphold(json);
                     break;
                 default:
                     result = 0;

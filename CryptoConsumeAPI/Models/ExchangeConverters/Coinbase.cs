@@ -2,10 +2,10 @@ namespace CryptoConsumeAPI.Models.ExchangeConvertors
 {
     public class Coinbase
     {
-        public Data Data { get; set; }
+        public CoinbaseData Data { get; set; }
     }
 
-    public partial class Data 
+    public class CoinbaseData 
     {
         public string Base { get; set; }
         public string Currency { get; set; }

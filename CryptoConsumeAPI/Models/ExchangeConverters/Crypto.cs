@@ -9,10 +9,10 @@ namespace CryptoConsumeAPI.Models.ExchangeConvertors
 
     public partial class Result
     {
-        public Data Data { get; set; }
+        public CryptoData Data { get; set; }
     }
 
-    public partial class Data
+    public class CryptoData
     {
         public decimal b { get; set; }
         public decimal k { get; set; }

@@ -86,6 +86,21 @@ namespace CryptoConsumeAPI.Controllers
             return price;
         }
 
+        private static dynamic ConvertKucoin(object json) 
+        {
+            decimal price = 0;
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var kucoin = JsonSerializer.Deserialize<Kucoin>(json.ToString(), options);
+            foreach (var item in kucoin.Data.Price)
+            {
+                price = Decimal.Parse(item.Value.ToString());
+            }
+            return price;
+        }
+
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -106,6 +121,9 @@ namespace CryptoConsumeAPI.Controllers
                     break;
                 case "crypto":
                     result = ConvertCrypto(json);
+                    break;
+                case "kucoin":
+                    result = ConvertKucoin(json);
                     break;
                 default:
                     result = 0;

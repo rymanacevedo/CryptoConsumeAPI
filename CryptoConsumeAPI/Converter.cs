@@ -113,6 +113,25 @@ namespace CryptoConsumeAPI.Controllers
             return price;
         }
 
+        private static dynamic ConvertAlpaca(object json)
+        {
+            decimal price = 0;
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var alpaca = JsonSerializer.Deserialize<Alpaca>(json.ToString(), options);
+
+            foreach (var item in alpaca.Quotes.Crypto)
+            {
+                var nav = item.Value.ToNavigation();
+                price = Decimal.Parse(nav["ap"].JsonElement.ToString());
+            }
+
+            return price;
+        }
+
         // converts a json object into a json element based of the exhange
         public static dynamic Convert(object json, string exchange)
         {
@@ -139,6 +158,9 @@ namespace CryptoConsumeAPI.Controllers
                     break;
                 case "uphold":
                     result = ConvertUphold(json);
+                    break;
+                case "alpaca":
+                    result = ConvertAlpaca(json);
                     break;
                 default:
                     result = 0;

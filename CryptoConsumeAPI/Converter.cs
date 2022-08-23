@@ -4,136 +4,130 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CryptoConsumeAPI.Models.ExchangeConvertors;
 using JsonEasyNavigation;
-
+using Newtonsoft.Json;
 namespace CryptoConsumeAPI.Controllers
 {
     public class Converter
     {
-        private static decimal ConvertBinance(object json)
+        static JsonSerializerSettings settings = new JsonSerializerSettings()
         {
-            var options = new JsonSerializerOptions()
-            {
-                NumberHandling = JsonNumberHandling.AllowReadingFromString
-            };
+            Error = (sender, error) => error.ErrorContext.Handled = true
+        };
 
-            var binance = JsonSerializer.Deserialize<Binance>(json.ToString(), options);
-            return binance.Price;
+        private static (decimal, int) ConvertBinance(object json)
+        {
+            decimal price = 0;
+            var binance = JsonConvert.DeserializeObject<Binance>(json.ToString(), settings);
+            if (binance is not null) { price = binance.Price; }
+            return (price, 0);
         }
 
-        private static dynamic ConvertKraken(object json)
+        private static (decimal, int) ConvertKraken(object json)
         {
-            var options = new JsonSerializerOptions()
-            {
-                NumberHandling = JsonNumberHandling.AllowReadingFromString |
-                JsonNumberHandling.WriteAsString,
-                PropertyNameCaseInsensitive = true
-            };
-
             var jsonDocument = JsonDocument.Parse(json.ToString());
             var nav = jsonDocument.ToNavigation();
             var result = nav["result"];
 
-            var crypto = JsonSerializer.Deserialize<Result>(result.JsonElement.ToString(), options);
+            var crypto = JsonConvert.DeserializeObject<Result>(result.JsonElement.ToString(), settings);
+
             decimal price = 0;
-            foreach (var item in crypto.Crypto)
+            if (crypto.Crypto is not null)
             {
-                nav = item.Value.ToNavigation();
-                price = Decimal.Parse(nav["a"][0].JsonElement.ToString());
+                foreach (var item in crypto.Crypto)
+                {
+                    nav = item.Value.ToNavigation();
+                    price = Decimal.Parse(nav["a"][0].JsonElement.ToString());
+                }
             }
 
-            return price;
+            return (price, 0);
         }
 
         private static dynamic ConvertCoinbase(object json)
         {
             decimal price = 0;
-            var options = new JsonSerializerOptions()
+            var data = JsonConvert.DeserializeObject<Coinbase>(json.ToString(), settings);
+
+            if (data is not null)
             {
-                NumberHandling = JsonNumberHandling.AllowReadingFromString |
-                                 JsonNumberHandling.WriteAsString,
-                PropertyNameCaseInsensitive = true
-            };
-            var data = JsonSerializer.Deserialize<Coinbase>(json.ToString(), options);
-            price = Decimal.Parse(data.Data.Amount);
-            return price;
+                price = Decimal.Parse(data.Data.Amount);
+            }
+            return (price, 0);
         }
 
 
         private static dynamic ConvertCoinMetro(object json)
         {
             decimal price = 0;
-            var options = new JsonSerializerOptions()
+            var coinMetro = JsonConvert.DeserializeObject<Coinmetro>(json.ToString(), settings);
+
+            if (coinMetro.latestPrices is not null)
             {
-                NumberHandling = JsonNumberHandling.AllowReadingFromString
-            };
+                price = coinMetro.latestPrices[0].price;
+            }
 
-            var coinMetro = JsonSerializer.Deserialize<Coinmetro>(json.ToString(), options);
-
-            price = coinMetro.latestPrices[0].price;
-
-            return price;
+            return (price, 0);
         }
 
         private static dynamic ConvertCrypto(object json)
         {
             decimal price = 0;
-            var options = new JsonSerializerOptions()
+            var crypto = JsonConvert.DeserializeObject<Crypto>(json.ToString(), settings);
+            if (crypto.Result.Data is not null)
             {
-                PropertyNameCaseInsensitive = true
-            };
-            var crypto = JsonSerializer.Deserialize<Crypto>(json.ToString(), options);
-            price = crypto.Result.Data.b;
-            return price;
-        }
-
-        private static dynamic ConvertKucoin(object json) 
-        {
-            decimal price = 0;
-            var options = new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var kucoin = JsonSerializer.Deserialize<Kucoin>(json.ToString(), options);
-            foreach (var item in kucoin.Data.Price)
-            {
-                price = Decimal.Parse(item.Value.ToString());
+                price = crypto.Result.Data.k;
             }
-            return price;
+            return (price, 0);
         }
 
-        private static dynamic ConvertUphold(object json) 
+        private static dynamic ConvertKucoin(object json)
+        {
+            decimal price = 0;
+            var kucoin = JsonConvert.DeserializeObject<Kucoin>(json.ToString(), settings);
+            if (kucoin.Data is not null)
+            {
+                foreach (var item in kucoin.Data)
+                {
+                    price = Decimal.Parse(item.Value.ToString());
+                }
+            }
+            return (price, 0);
+        }
+
+        private static dynamic ConvertUphold(object json)
+        {
+            decimal price = 0;
+            var uphold = JsonConvert.DeserializeObject<Uphold>(json.ToString(), settings);
+            if (uphold is not null)
+            {
+                price = Decimal.Parse(uphold.Ask);
+            }
+            return (price, 0);
+        }
+
+        private static (decimal, int) ConvertAlpaca(object json)
         {
             decimal price = 0;
             var options = new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             };
-            var uphold = JsonSerializer.Deserialize<Uphold>(json.ToString(), options);
-            price = Decimal.Parse(uphold.Ask);
-            return price;
-        }
 
-        private static dynamic ConvertAlpaca(object json)
-        {
-            decimal price = 0;
-            var options = new JsonSerializerOptions()
+            var alpaca = System.Text.Json.JsonSerializer.Deserialize<Alpaca>(json.ToString(), options);
+
+            if (alpaca.Quotes.Crypto is not null)
             {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var alpaca = JsonSerializer.Deserialize<Alpaca>(json.ToString(), options);
-
-            foreach (var item in alpaca.Quotes.Crypto)
-            {
-                var nav = item.Value.ToNavigation();
-                price = Decimal.Parse(nav["ap"].JsonElement.ToString());
+                foreach (var item in alpaca.Quotes.Crypto)
+                {
+                    var nav = item.Value.ToNavigation();
+                    price = Decimal.Parse(nav["ap"].JsonElement.ToString());
+                }
             }
 
-            return price;
+            return (price, 0);
         }
 
-        // converts a json object into a json element based of the exhange
-        public static dynamic Convert(object json, string exchange)
+        public static (decimal, int) Convert(object json, string exchange)
         {
             dynamic result = null;
             switch (exchange)
@@ -163,7 +157,7 @@ namespace CryptoConsumeAPI.Controllers
                     result = ConvertAlpaca(json);
                     break;
                 default:
-                    result = 0;
+                    result = (0, 0);
                     break;
             }
             return result;

@@ -15,7 +15,7 @@ namespace CryptoConsumeAPI.Controllers
         [HttpGet]
         public async Task<string> GetAsync(string coin = "BTC", string currency = "USD")
         {
-            var tokens = await Processor.Start(coin, currency, exchange, $"prices?currencies={coin}", api);
+            var tokens = await Processor.Start(coin, currency, exchange, $"prices?currencies={coin}&base={currency}", api);
             return tokens;
 
         }
